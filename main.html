@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-commerce App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.4/axios.min.js"></script>
+    <style>
+        #butt {
+            position: absolute;
+            top: 8%;
+            left: 90%;
+        }
+    </style>
+</head>
+
+<body id="fullbody">
+    <div id="container1">
+        <fieldset id="fieldset">
+            <legend>
+                <h3>E-commerce App</h3>
+            </legend>
+            <div id="container2">
+                <label for="sellingprice">Selling Price :-</label>
+                <input type="number" id="sellingprice" placeholder="price">
+                <label for="productname">Product Name :-</label>
+                <input type="text" id="productname" placeholder="name">
+                <button id="button">Add Product</button><br><br>
+                <button id="butt">Dark Mode</button><br><br>
+                <ul id="list">
+                    <h2 id="head">Total Value Worth Of Products :-</h2>
+                    <h1>Products</h1>
+                </ul>
+            </div>
+        </fieldset>
+        <script>
+            const btn = document.querySelector("#butt")
+
+            btn.addEventListener("click", changeColor)
+            function changeColor() {
+                if (btn.innerHTML === "Dark Mode") {
+                    const dist = document.querySelector("#fullbody")
+                    dist.style.backgroundColor = "#282828"
+                    dist.style.color = "white"
+                    btn.innerHTML = "Light Mode"
+                }
+                else {
+                    const dist = document.querySelector("#fullbody")
+                    dist.style.backgroundColor = "white"
+                    dist.style.color = "black"
+                    btn.innerHTML = "Dark Mode"
+                }
+
+            }
+
+            const price = document.querySelector("#sellingprice");
+            const product = document.querySelector("#productname");
+            const bill = document.querySelector("#list");
+            const button = document.querySelector("#button");
+            const heading = document.querySelector("#head");
+            let totalValue = 0;
+
+            // CRUD CRUD API URL
+            const apiUrl = "https://crudcrud.com/api/61ecc56f1f3f47f3ad5c81527b6f7f1c/products";
+
+            // Retrieve the totalValue from local storage, or initialize to 0 if it doesn't exist
+            totalValue = parseFloat(localStorage.getItem('totalValue')) || 0;
+            updateTotalValueDisplay();
+
+            button.addEventListener("click", add);
+
+            function add() {
+                if (price.value === '' || product.value === '') {
+                    alert("Fill in all the details");
+                } else {
+                    const productPrice = parseFloat(price.value);
+                    const productName = product.value;
+                    const data = { price: productPrice, name: productName };
+
+                    // Send a POST request to add a product
+                    axios.post(apiUrl, data)
+                        .then((response) => {
+                            const result = response.data;
+                            const li = document.createElement("li");
+                            li.innerHTML = `${result.price} ${result.name}`;
+                            li.setAttribute('data-product-id', result._id); // Store the product ID
+                            bill.appendChild(li);
+
+                            const del = document.createElement("button");
+                            del.innerHTML = "Delete Product";
+                            del.addEventListener('click', () => deleteProduct(result._id));
+                            li.appendChild(del);
+
+                            totalValue += result.price;
+                            updateTotalValueDisplay();
+                        });
+                }
+
+                price.value = '';
+                product.value = '';
+            }
+
+            // Function to retrieve product data from the server
+            function getProducts() {
+                axios.get(apiUrl)
+                    .then((response) => {
+                        const data = response.data;
+                        // Display the products on the client-side
+                        data.forEach((product) => {
+                            const li = document.createElement("li");
+                            li.innerHTML = `${product.price} ${product.name}`;
+                            li.setAttribute('data-product-id', product._id); // Store the product ID
+                            bill.appendChild(li);
+
+                            const del = document.createElement("button");
+                            del.innerHTML = "Delete Product";
+                            del.addEventListener('click', () => deleteProduct(product._id));
+                            li.appendChild(del);
+                        });
+                    });
+            }
+
+            // Function to delete a product from the server
+            function deleteProduct(productId) {
+                axios.delete(`${apiUrl}/${productId}`)
+                    .then(() => {
+                        const listItem = document.querySelector(`li[data-product-id="${productId}"]`);
+                        if (listItem) {
+                            const priceText = listItem.textContent.split(" ")[0];
+                            const productPrice = parseFloat(priceText);
+                            totalValue -= productPrice;
+                            updateTotalValueDisplay();
+                            listItem.remove();
+                        }
+                    });
+            }
+
+            // Update the total value display
+            function updateTotalValueDisplay() {
+                heading.textContent = `Total Value Worth Of Products: ₹${totalValue}`;
+                // Store the updated totalValue in local storage
+                localStorage.setItem('totalValue', totalValue.toString());
+            }
+
+            // Call getProducts when the page loads to populate the list
+            getProducts();
+        </script>
+    </div>
+</body>
+
+</html>
