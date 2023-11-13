@@ -4,30 +4,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-commerce App</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.4/axios.min.js"></script>
+    <title>E-commerce Website</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.1/axios.min.js"></script>
     <style>
+        body {
+            padding: 20px;
+            background-image: url('https://img.freepik.com/free-photo/shopping-cart-with-wooden-elements_23-2148879396.jpg?w=1060&t=st=1699852448~exp=1699853048~hmac=6f7f03f0a980d0088967028257a50c6e9a85b9dce18dfb03a89603ae1fff442a'); 
+            background-size: cover;
+            background-position: center;
+            color: white; 
+        }
+
         #butt {
             position: absolute;
             top: 8%;
             left: 90%;
         }
+
+        #container2 {
+            margin-top: 20px;
+        }
+
+        #list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #list li {
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 
 <body id="fullbody">
-    <div id="container1">
-        <fieldset id="fieldset">
-            <legend>
+    <div id="container1" class="container">
+        <fieldset id="fieldset" class="border p-3 rounded">
+            <legend class="w-auto">
                 <h3>E-commerce App</h3>
             </legend>
             <div id="container2">
-                <label for="sellingprice">Selling Price :-</label>
-                <input type="number" id="sellingprice" placeholder="price">
-                <label for="productname">Product Name :-</label>
-                <input type="text" id="productname" placeholder="name">
-                <button id="button">Add Product</button><br><br>
-                <button id="butt">Dark Mode</button><br><br>
+                <div class="form-group">
+                    <label for="sellingprice">Selling Price :-</label>
+                    <input type="number" id="sellingprice" class="form-control" placeholder="price">
+                </div>
+                <div class="form-group">
+                    <label for="productname">Product Name :-</label>
+                    <input type="text" id="productname" class="form-control" placeholder="name">
+                </div>
+                <button id="button" class="btn btn-primary">Add Product</button><br><br>
+                <button id="butt" class="btn btn-dark">Dark Mode</button><br><br>
                 <ul id="list">
                     <h2 id="head">Total Value Worth Of Products :-</h2>
                     <h1>Products</h1>
@@ -41,13 +68,13 @@
             function changeColor() {
                 if (btn.innerHTML === "Dark Mode") {
                     const dist = document.querySelector("#fullbody")
-                    dist.style.backgroundColor = "#282828"
+                    // dist.style.backgroundColor = "#282828"
                     dist.style.color = "white"
                     btn.innerHTML = "Light Mode"
                 }
                 else {
                     const dist = document.querySelector("#fullbody")
-                    dist.style.backgroundColor = "white"
+                    // dist.style.backgroundColor = "white"
                     dist.style.color = "black"
                     btn.innerHTML = "Dark Mode"
                 }
@@ -62,7 +89,7 @@
             let totalValue = 0;
 
             // CRUD CRUD API URL
-            const apiUrl = "https://crudcrud.com/api/61ecc56f1f3f47f3ad5c81527b6f7f1c/products";
+            const apiUrl = "https://crudcrud.com/api/763a672c6795498c9e952ef859aead82/products";
 
             // Retrieve the totalValue from local storage, or initialize to 0 if it doesn't exist
             totalValue = parseFloat(localStorage.getItem('totalValue')) || 0;
@@ -147,6 +174,11 @@
             getProducts();
         </script>
     </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 
 </html>
